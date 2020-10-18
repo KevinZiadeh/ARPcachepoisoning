@@ -58,6 +58,7 @@ if __name__ == '__main__':
     Detecting router needs testing
     
     Optional:
+        Use nmap to get the mac address instead of using ping
         Make pinging work in the background without printing it to the user
         Implement different ARP spoofing techniques that user can select
     '''
