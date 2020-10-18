@@ -5,7 +5,7 @@ from network import Network
 from color import Color #used to output to the terminals with colors
 
 def initialize():
-    Color.pl("{?} Doing pings to discover build the ARP table")
+    Color.pl("{?} Doing pings to discover clients and build the ARP table")
     time.sleep(2)
 
     subprocess.run(["ip", "neigh", "flush", "all"]) #clear arp table
@@ -54,6 +54,8 @@ if __name__ == '__main__':
     Insert info you need to use for the attack 
     User may want to use different values from what we found
     Do the attack 
+    
+    Detecting router needs testing
     
     Optional:
         Make pinging work in the background without printing it to the user
