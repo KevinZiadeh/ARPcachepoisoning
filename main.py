@@ -96,6 +96,7 @@ if __name__ == '__main__':
 
     '''
     Do the attack 
+    Check if attack works
     
     Detecting router needs testing
     
