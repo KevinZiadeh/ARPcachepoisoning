@@ -31,13 +31,13 @@ The last two types of attacks perform by sending asynchronous and diversified AR
 ### Gathering Device Information - optional
 You might want to insert the IP or MAC address manually of your device, router or other information. There are many ways to do it. 
 On any linux distribution, you can run `ifconfig` and from it you can get your IP(inet), MAC(ether) and broadcast address. Also using the netmask and inet, you can get your router ip address. 
-![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/ifconfig.png)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/ifconfig.png?raw=true)
 Another way on linux is to go to Settings -> Network -> Press the wheel icon next to your connection and you will get a window similar to this.
-![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/settings.png)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/settings.png?raw=true)
 
 On windows, you can run `ipconfig` to get the IP of the device and the router, from the IP and Subnet Mask you can get the broadcast IP. Running '`getmac` can give you the MAC of your device.
-![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/ipconfig.png)
-![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/getmac.png)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/ipconfig.png?raw=true)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/getmac.png?raw=true)
 ### Performing the Attack
 After making sure you have all the requirements installed, all you need to do is navigate the the attack folder and run `python3 main_[OS].py`
 You will just have to follow the instructions after it
@@ -47,13 +47,14 @@ $ cd ARPcachepoisoning/Attack/
 $ python3 main_Linux.py
 ```
 Here is an example of how it should look like
-![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/attack1.png)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/attack1.png?raw=true)
 
 If all runs well and you give the correct information, you should see something similar to this
-![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/attack2.png)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/attack2.png?raw=true)
 
 To check if the attack is working, run `arp -a` before and while the attack if happening, and look at the entry in the ARP table.
-![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/attack2.png?raw=true)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/attack3.png?raw=true)
+
 We can see that the MAC associated with the IP for the router `192.168.1.1` on interface `192.168.1.201` changed from `0c:80:63:52:f7:f6` to `90:34:ff:78:dd:2e`
 
 ## Defense and Detection
