@@ -1,13 +1,14 @@
 # ARPcachepoisoning
-University Project (EECE 655 @ AUB) where we implement a attack and try to detect it
-Tested in Linux and Windows
+> University Project (EECE 655 @ AUB) where we implement an ARP attack and try to detect it
+
 ## Requirements
 
-  Python (version greater than 2.7)
-  
-  NMap
-  
-  Scapy
+  For this attack to be performed, you need the following tools to be installed on the machine you will be performing this attacking from:
+```
+* Python 3
+* Scapy 2.4.4
+* Nmap 
+```
   
 ## Overview
   The project consisted of two main parts:
@@ -27,6 +28,15 @@ Tested in Linux and Windows
  
 The last two types of attacks perform by sending asynchronous and diversified ARP packets. Randomness is an important pillar to fool the defense system. The sending frequency and type of ARP message differ each iteration.
 
+### Performing the Attack
+After making sure you have all the requirements installed, all you need to do is navigate the the attack folder and run `python3 main_[OS].py`
+You will just have to follow the instructions after it
+```
+$ git clone https://github.com/KevinZiadeh/ARPcachepoisoning.git
+$ cd ARPcachepoisoning/Attack/
+$ python3 main_Linux.py
+```
+#### test
 
 ## Defense and Detection
 
