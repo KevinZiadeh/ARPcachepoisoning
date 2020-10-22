@@ -9,4 +9,4 @@ class Network:
         self.broadcastIP = info[2]
 
     def toString(self):
-        return "Router IP: " + self.ip + "; MAC: " + self.mac + "; BroadcastIP: " + self.broadcastIP
+        return " {P}Router IP: {W}" + self.ip + "{P}; MAC: {W}" + self.mac + "{P}; BroadcastIP: {W}" + self.broadcastIP

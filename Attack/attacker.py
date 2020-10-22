@@ -8,4 +8,4 @@ class Attacker:
         self.mac = info[1]
 
     def toString(self):
-        return "Attacker IP: " + self.ip + "; MAC: " + self.mac
+        return "{P}Attacker IP: {W}" + self.ip + "{P}; MAC: {W}" + self.mac

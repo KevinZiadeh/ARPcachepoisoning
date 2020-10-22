@@ -8,4 +8,4 @@ class Victim:
         self.mac = info[1]
 
     def toString(self):
-        return "Victim IP: " + self.ip + "; MAC: " + self.mac
+        return "{P}Victim IP: {W}" + self.ip + "{P}; MAC: {W}" + self.mac
