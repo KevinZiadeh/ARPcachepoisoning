@@ -53,7 +53,7 @@ If all runs well and you give the correct information, you should see something 
 ![](https://raw.githubusercontent.com/KevinZiadeh/ARPcachepoisoning/master/res/attack2.png)
 
 To check if the attack is working, run `arp -a` before and while the attack if happening, and look at the entry in the ARP table.
-![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/attack2.png?raw=true)
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/attack2.png?raw=true)
 We can see that the MAC associated with the IP for the router `192.168.1.1` on interface `192.168.1.201` changed from `0c:80:63:52:f7:f6` to `90:34:ff:78:dd:2e`
 
 ## Defense and Detection
