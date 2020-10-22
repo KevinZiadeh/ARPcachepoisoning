@@ -32,12 +32,16 @@ The last two types of attacks perform by sending asynchronous and diversified AR
 You might want to insert the IP or MAC address manually of your device, router or other information. There are many ways to do it. 
 On any linux distribution, you can run `ifconfig` and from it you can get your IP(inet), MAC(ether) and broadcast address. Also using the netmask and inet, you can get your router ip address. 
 ![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/ifconfig.png?raw=true)
+
 Another way on linux is to go to Settings -> Network -> Press the wheel icon next to your connection and you will get a window similar to this.
 ![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/settings.png?raw=true)
 
 On windows, you can run `ipconfig` to get the IP of the device and the router, from the IP and Subnet Mask you can get the broadcast IP. Running '`getmac` can give you the MAC of your device.
+
 ![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/ipconfig.png?raw=true)
+
 ![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/getmac.png?raw=true)
+
 ### Performing the Attack
 After making sure you have all the requirements installed, all you need to do is navigate the the attack folder and run `python3 main_[OS].py`
 You will just have to follow the instructions after it
