@@ -30,27 +30,19 @@ def process(packet):
             else:
                 arp_dict[line[1]] = line[0]
         if not duplicate_mac:
-            # if packet[ARP].op == 1: # if it is an ARP request TODO: fix ARP request
-            #     try:
-            #         # get the real MAC address of the destination
-            #         real_mac = get_mac(packet[ARP].psrc)
-            #         print(real_mac)
-            #         # get the MAC address from the packet sent to us
-            #         response_mac = packet[ARP].hwsrc
-            #         print(response_mac)
-            #         # if they're different, definitely there is an attack
-            #         if real_mac== '00:00:00:00:00:00' or response_mac== '00:00:00:00:00':
-            #             pass
-            #         else:
-            #             if real_mac != response_mac:
-            #                 print("[!] You are under attack, REAL-MAC:", real_mac.upper(), "FAKE-MAC:", response_mac.upper())
-            #     except IndexError:
-            #         # unable to find the real mac
-            #         # may be a fake IP or firewall is blocking packets
-            #         pass
+            if packet[ARP].op == 1:
+                try:
+                    real_mac = get_mac(packet[ARP].psrc)
+                    response_mac = packet[ARP].hwsrc
+                    if response_mac == '00:00:00:00:00:00' or response_mac == packet[ARP].hwdst:
+                        pass
+                    elif real_mac != response_mac:
+                        print("[!] You are under attack, REAL-MAC:",real_mac.upper(), "FAKE-MAC:", response_mac.upper())
+                except IndexError:
+                    pass
             #the section below is from https://github.com/mpostument/hacking_tools/blob/master/arp_spoof_detector/arp_spoof_detector.py
             #note that this section is only needed if the attacker's MAC is randomized
-            if packet[ARP].op == 2: # if it is an ARP response (ARP reply)
+            elif packet[ARP].op == 2: # if it is an ARP response (ARP reply)
                 try:
                     # get the real MAC address of the sender
                     real_mac = get_mac(packet[ARP].psrc)
