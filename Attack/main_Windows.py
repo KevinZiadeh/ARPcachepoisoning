@@ -64,7 +64,7 @@ if __name__ == '__main__':
     takedown=False
     specific=False
     # seed(655)
-    (network, attacker, victimsList) = initialize()
+    (network, attacker, victimsList,broadcastIP) = initialize()
     Color.pl("{+} " + network.toString())
     Color.pl("{+} " + attacker.toString())
     for e in victimsList:
