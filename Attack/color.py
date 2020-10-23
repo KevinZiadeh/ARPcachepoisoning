@@ -5,7 +5,7 @@ Imported from Wifite
 import sys
 
 class Color(object):
-    ''' Helper object for easily printing colored text to the terminal. '''
+    ''' Helper object for easily printing colored text to the terminal. User friendly output '''
 
     # Basic console colors
     colors = {
@@ -27,8 +27,10 @@ class Color(object):
         '{?}': ' {W}[{C}?{W}]'
     }
 
+    
     last_sameline_length = 0
 
+    
     @staticmethod
     def p(text):
         '''
@@ -112,6 +114,7 @@ class Color(object):
         #     err = err.replace('  File', '{W}File')
         #     err = err.replace('  Exception: ', '{R}Exception: {O}')
         #     Color.pl(err)
+        #
 
 
 if __name__ == '__main__':
