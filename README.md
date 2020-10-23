@@ -65,6 +65,8 @@ To check if the attack is working, run `arp -a` before and while the attack if h
 
 We can see that the MAC associated with the IP for the router `192.168.1.1` on interface `192.168.1.201` changed from `0c:80:63:52:f7:f6` to `90:34:ff:78:dd:2e`
 
+Farid and Kevin's contribution were equal. Kevin worked on how to gather important information from the network through the subprocess function which excecute commands on the PC and Farid worked on the implementation of the attack types while some other functionalities were implemented by both. Additionally, both worked to make this attack work on Windows and Linux. In fact, Farid was working on Windows while Kevin on Linux. Farid made modification on the information gathering code part to match Windows's cmd layout structure and Kevin made sure that all types of attack worked well on Linux. Finally, the implementation of the attack was successful on both Operating Systems.
+
 ## Detection
 The detection tool works with the help of the Scapy package which allowed us to use commands to process all incoming packets and easily retrieve packet information. The tool was implemented for Windows (because they are usually the victims #Linux4Life :) ). It can be used to detect previous attacks, currently occurring attacks, or even future attacks as long as it is operating. It has a simple user interface that simply allows the user to select whether to initialize the tool or not. Please note that it may take some time to detect the attack for the first time. This was not always happening so we were not sure what was causing this. 
 
