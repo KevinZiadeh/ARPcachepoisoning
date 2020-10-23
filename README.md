@@ -12,10 +12,13 @@
   
 ## Overview
   The project consisted of two main parts:
-    ARP spoofing attack launching
-    ARP attack detection
+```
+* ARP spoofing attack launching
+* ARP attack detection
+```
   With the help of NMap, the attacker can view all potential victims on the LAN network to launch three types of ARP spoofing attacks. These attacks are also detected by our detection tool. The project resulted in launching successful ARP attacks that could be prevented by deploying a defensive monitor. 
-  Note that Farid Eid El Beyrouthy and Kevin Ziadeh worked on the attack, while Imad Al Assir and Ghadi Fouad worked on the detection.
+  
+Note that Farid Eid El Beyrouthy and Kevin Ziadeh worked on the attack, while Imad Al Assir and Ghadi Fouad worked on the detection.
   
 ## Attack
   The first part of the attack consists of collecting the network data specially the IP/MAC pairs of all network components using NMap. After this step, the user can choose to launch three types of attack: Man-in-the-middle, Specific DOS (perturbation of victim's connection), and "Take down the network". 
@@ -64,6 +67,7 @@ We can see that the MAC associated with the IP for the router `192.168.1.1` on i
 
 ## Detection
 The detection tool works with the help of the Scapy package which allowed us to use commands to process all incoming packets and easily retrieve packet information. The tool was implemented for Windows (because they are usually the victims #Linux4Life :) ). It can be used to detect previous attacks, currently occurring attacks, or even future attacks as long as it is operating. It has a simple user interface that simply allows the user to select whether to initialize the tool or not. Please note that it may take some time to detect the attack for the first time. This was not always happening so we were not sure what was causing this. 
+
 ### How it works
 The tool initially scans the host's ARP table on the fly, and checks if the entry that is to be added is a duplicate entry or not. If it is, then there is a problem, i.e. the attacker is poisoning our ARP table. This detection works against man-in-the-middle attacks since the attacker cannot spoof his MAC address. However, it does not work if the attacker is using a random MAC, i.e. not a duplicate one.
 
