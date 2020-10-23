@@ -13,8 +13,9 @@
 ## Overview
   The project consisted of two main parts:
     ARP spoofing attack launching
-    ARP attack detection and prevention
-  With the help of NMap, the attacker can view all potential victims on the LAN network to launch three types of ARP spoofing attacks.//talk about defense (1 phrase)//. The project resulted in launching successful ARP attacks that could be prevented by deploying a defensive monitor.
+    ARP attack detection
+  With the help of NMap, the attacker can view all potential victims on the LAN network to launch three types of ARP spoofing attacks. These attacks are also detected by our detection tool. The project resulted in launching successful ARP attacks that could be prevented by deploying a defensive monitor. 
+  Note that Farid Eid El Beyrouthy and Kevin Ziadeh worked on the attack, while Imad Al Assir and Ghadi Fouad worked on the detection.
   
 ## Attack
   The first part of the attack consists of collecting the network data specially the IP/MAC pairs of all network components using NMap. After this step, the user can choose to launch three types of attack: Man-in-the-middle, Specific DOS (perturbation of victim's connection), and "Take down the network". 
