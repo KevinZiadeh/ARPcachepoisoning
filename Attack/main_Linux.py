@@ -90,7 +90,7 @@ if __name__ == '__main__':
             break
         else:
             Color.pl("{!} Invalid Input")
-
+#Specifying the target device in case of man-in-the-middle or DOS attack
     while(not takedown):
         Color.pl("{?} Do you want to enter the target manually? (y or n)")
         selection = input().lower()
