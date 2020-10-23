@@ -61,9 +61,18 @@ To check if the attack is working, run `arp -a` before and while the attack if h
 
 We can see that the MAC associated with the IP for the router `192.168.1.1` on interface `192.168.1.201` changed from `0c:80:63:52:f7:f6` to `90:34:ff:78:dd:2e`
 
-## Defense and Detection
-The detection tool works with the help of the Scapy package which allowed us to use commands to process all incoming packets and easily retrieve packet information. The tool was implemented for Windows (because they are usually the victims #Linux4Life :) ). It can be used to detect previous attacks, currently occurring attacks, or even future attacks as long as it is operating. It has a simple user interface that simply allows the user to select whether to initialize the tool or not. The tool initially scans the host's ARP table on the fly, and checks if the entry that is to be added is a duplicate entry or not. If it is, then there is a problem, i.e. the attacker is poisoning our ARP table. This detection works against man-in-the-middle attacks since the attacker cannot spoof his MAC. However, it does not work if the attacker is using a random MAC, i.e. not a duplicate one.
+## Detection
+The detection tool works with the help of the Scapy package which allowed us to use commands to process all incoming packets and easily retrieve packet information. The tool was implemented for Windows (because they are usually the victims #Linux4Life :) ). It can be used to detect previous attacks, currently occurring attacks, or even future attacks as long as it is operating. It has a simple user interface that simply allows the user to select whether to initialize the tool or not. Please note that it may take some time to detect the attack for the first time. This was not always happening so we were not sure what was causing this. 
+### How it works
+The tool initially scans the host's ARP table on the fly, and checks if the entry that is to be added is a duplicate entry or not. If it is, then there is a problem, i.e. the attacker is poisoning our ARP table. This detection works against man-in-the-middle attacks since the attacker cannot spoof his MAC address. However, it does not work if the attacker is using a random MAC, i.e. not a duplicate one.
+
+The screenshot below shows a sample run of the detection of man-in-the-middle attacks
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/man-in-the-middle.png?raw=true)
 
 The tool can also detect more complex attacks, in which the attacker randomizes the MAC address or uses a non-existing one, by sending out an ARP broadcast request with the IP address received in the attack packet to get the real MAC address of this IP. It then compares the MAC address it received from the broadcast with the source MAC address in the attack packet to detect any falsified association between an IP address and its MAC address. This works for both ARP requests and ARP reply attacks. 
 
-### References
+The screenshot below shows a sample run of the detection of attacks where the attacker's MAC address is spoofed
+![](https://github.com/KevinZiadeh/ARPcachepoisoning/blob/main/res/specific.png?raw=true)
+
+## References
+<https://github.com/mpostument/hacking_tools/blob/master/arp_spoof_detector/arp_spoof_detector.py>
