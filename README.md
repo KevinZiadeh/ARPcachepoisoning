@@ -1,5 +1,5 @@
 # ARPcachepoisoning
-> University Project (EECE 655 @ AUB) where we implement an ARP attack and try to detect it
+> University Project (EECE 655 - Internet Security @ AUB) where we implement an ARP attack and try to detect it
 
 ## Requirements
 
